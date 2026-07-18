@@ -1,12 +1,13 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import { menu } from "@/lib/menu";
 import { useCart } from "@/context/CartContext";
+import Link from "next/link";
 
-export default function Home() {
+function MenuContent() {
   const { addToCart } = useCart();
 
   const searchParams = useSearchParams();
@@ -17,9 +18,17 @@ export default function Home() {
       <div className="max-w-6xl mx-auto">
 
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-green-700">
-            🍽️ Wacha Mood
-          </h1>
+          <div>
+            <h1 className="text-4xl font-bold text-green-700">
+              🍽️ Wacha Mood
+            </h1>
+
+            {table && (
+              <p className="text-green-700 font-semibold mt-2">
+                🍽️ Table {table}
+              </p>
+            )}
+          </div>
 
           <Link
             href={table ? `/panier?table=${table}` : "/panier"}
@@ -29,18 +38,14 @@ export default function Home() {
           </Link>
         </div>
 
-        {table && (
-          <div className="bg-green-600 text-white text-center py-3 rounded-xl mb-8 text-xl font-bold">
-            🍽️ Vous êtes à la table {table}
-          </div>
-        )}
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
           {menu.map((plat) => (
             <div
               key={plat.id}
               className="bg-white rounded-xl shadow-lg overflow-hidden"
             >
+
               <Image
                 src={plat.image}
                 alt={plat.name}
@@ -50,6 +55,7 @@ export default function Home() {
               />
 
               <div className="p-4">
+
                 <h2 className="text-2xl font-bold">
                   {plat.name}
                 </h2>
@@ -59,6 +65,7 @@ export default function Home() {
                 </p>
 
                 <div className="flex justify-between items-center mt-4">
+
                   <span className="text-xl font-bold text-green-700">
                     {plat.price.toFixed(2)} €
                   </span>
@@ -75,13 +82,25 @@ export default function Home() {
                   >
                     Ajouter
                   </button>
+
                 </div>
+
               </div>
+
             </div>
           ))}
+
         </div>
 
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <MenuContent />
+    </Suspense>
   );
 }
