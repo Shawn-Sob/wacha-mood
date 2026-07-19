@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { supabase } from "@/lib/supabase";
 
-export default function PanierPage() {
+function PanierContent() {
   const { cart, removeFromCart, clearCart, total } = useCart();
 
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,9 @@ export default function PanierPage() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
       const items = cart.map((item) => ({
         order_id: order.id,
@@ -53,7 +55,9 @@ export default function PanierPage() {
         .from("order_items")
         .insert(items);
 
-      if (itemsError) throw itemsError;
+      if (itemsError) {
+        throw itemsError;
+      }
 
       clearCart();
 
@@ -117,6 +121,7 @@ export default function PanierPage() {
             ))}
 
             <div className="bg-white rounded-xl shadow p-6 mt-6">
+
               <h2 className="text-3xl font-bold mb-6">
                 Total : {total.toFixed(2)} €
               </h2>
@@ -130,6 +135,7 @@ export default function PanierPage() {
                   ? "Envoi en cours..."
                   : "✅ Valider la commande"}
               </button>
+
             </div>
           </>
         )}
@@ -143,5 +149,21 @@ export default function PanierPage() {
 
       </div>
     </main>
+  );
+}
+
+export default function PanierPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen flex items-center justify-center">
+          <p className="text-xl">
+            Chargement du panier...
+          </p>
+        </main>
+      }
+    >
+      <PanierContent />
+    </Suspense>
   );
 }
