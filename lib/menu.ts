@@ -1,26 +1,58 @@
 export const menu = [
   {
     id: 1,
-    category: "Plats",
-    name: "Pouklet",
-    price: 13.90,
-    image: "/plats/pouklet.jpg",
-    description: "Poulet mariné, frites et salade."
+    name: "Poulet Yassa",
+    description: "Poulet mariné avec oignons et sauce citronnée",
+    price: 12.5,
+    image: "/plats/poulet-yassa.jpg",
   },
   {
     id: 2,
-    category: "Plats",
-    name: "Burger Wacha",
-    price: 15.90,
-    image: "/plats/burger.jpg",
-    description: "Burger maison avec steak et cheddar."
+    name: "Mafé",
+    description: "Viande mijotée dans une sauce à l'arachide",
+    price: 12.5,
+    image: "/plats/mafe.jpg",
   },
   {
     id: 3,
-    category: "Salades",
-    name: "Salade César",
-    price: 11.90,
-    image: "/plats/cesar.jpg",
-    description: "Salade, poulet, parmesan et croûtons."
-  }
+    name: "Thiéb",
+    description: "Riz parfumé accompagné de légumes et de viande ou poisson",
+    price: 12.5,
+    image: "/plats/thieb.jpg",
+  },
+  {
+    id: 4,
+    name: "Ndolé",
+    description: "Plat traditionnel camerounais aux feuilles de ndolé",
+    price: 12.5,
+    image: "/plats/ndole.jpg",
+  },
+  {
+    id: 5,
+    name: "Alloco",
+    description: "Bananes plantain frites",
+    price: 4,
+    image: "/plats/alloco.jpg",
+  },
+  {
+    id: 6,
+    name: "Poulet",
+    description: "Poulet savoureux accompagné de sa garniture",
+    price: 12.5,
+    image: "/plats/poulet.jpg",
+  },
+  {
+    id: 7,
+    name: "Tartare de saumon",
+    description: "Tartare de saumon frais et savoureux",
+    price: 12.5,
+    image: "/plats/tartare-saumon.jpg",
+  },
+  {
+    id: 8,
+    name: "Salade Wacha",
+    description: "Salade fraîche et gourmande",
+    price: 12.5,
+    image: "/plats/salade-wacha.jpg",
+  },
 ];

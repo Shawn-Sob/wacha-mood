@@ -20,9 +20,22 @@ type OrderItem = {
 };
 
 export default function AdminPage() {
+  const [connecte, setConnecte] = useState(false);
+  const [motDePasse, setMotDePasse] = useState("");
+  const [erreur, setErreur] = useState("");
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  function seConnecter() {
+    if (motDePasse === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
+      setConnecte(true);
+      setErreur("");
+    } else {
+      setErreur("Mot de passe incorrect.");
+    }
+  }
 
   async function chargerCommandes() {
     setLoading(true);
@@ -38,11 +51,11 @@ export default function AdminPage() {
       .order("id", { ascending: true });
 
     if (ordersError) {
-      console.error("Erreur commandes :", ordersError);
+      console.error(ordersError);
     }
 
     if (itemsError) {
-      console.error("Erreur articles :", itemsError);
+      console.error(itemsError);
     }
 
     setOrders(ordersData || []);
@@ -50,15 +63,17 @@ export default function AdminPage() {
     setLoading(false);
   }
 
-  async function changerStatut(orderId: number, nouveauStatut: string) {
+  async function changerStatut(
+    orderId: number,
+    nouveauStatut: string
+  ) {
     const { error } = await supabase
       .from("orders")
       .update({ status: nouveauStatut })
       .eq("id", orderId);
 
     if (error) {
-      alert("Erreur lors de la modification du statut.");
-      console.error(error);
+      alert("Erreur lors de la modification.");
       return;
     }
 
@@ -66,6 +81,8 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
+    if (!connecte) return;
+
     chargerCommandes();
 
     const interval = setInterval(() => {
@@ -73,30 +90,58 @@ export default function AdminPage() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [connecte]);
 
   function articlesDeLaCommande(orderId: number) {
-    return orderItems.filter((item) => item.order_id === orderId);
+    return orderItems.filter(
+      (item) => item.order_id === orderId
+    );
   }
 
-  function couleurStatut(status: string) {
-    if (status === "En attente") {
-      return "bg-yellow-100 text-yellow-800";
-    }
+  if (!connecte) {
+    return (
+      <main className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
 
-    if (status === "En préparation") {
-      return "bg-blue-100 text-blue-800";
-    }
+        <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
 
-    if (status === "Prête") {
-      return "bg-green-100 text-green-800";
-    }
+          <h1 className="text-3xl font-bold text-center mb-2">
+            🔒 Wacha Mood Admin
+          </h1>
 
-    if (status === "Terminée") {
-      return "bg-gray-200 text-gray-700";
-    }
+          <p className="text-center text-gray-600 mb-6">
+            Accès réservé au restaurant
+          </p>
 
-    return "bg-gray-100 text-gray-800";
+          <input
+            type="password"
+            placeholder="Mot de passe"
+            value={motDePasse}
+            onChange={(e) => setMotDePasse(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                seConnecter();
+              }
+            }}
+            className="w-full border rounded-lg p-3 mb-4"
+          />
+
+          <button
+            onClick={seConnecter}
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold"
+          >
+            🔐 Se connecter
+          </button>
+
+          {erreur && (
+            <p className="text-red-600 text-center mt-4">
+              {erreur}
+            </p>
+          )}
+
+        </div>
+
+      </main>
+    );
   }
 
   return (
@@ -104,40 +149,50 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto">
 
         <div className="flex justify-between items-center mb-8">
+
           <div>
             <h1 className="text-4xl font-bold text-green-700">
               Wacha Mood Admin
             </h1>
 
             <p className="text-gray-600 mt-2">
-              Gestion des commandes du restaurant
+              Gestion des commandes
             </p>
           </div>
 
-          <button
-            onClick={chargerCommandes}
-            className="bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-lg font-semibold"
-          >
-            🔄 Actualiser
-          </button>
+          <div className="flex gap-3">
+
+            <button
+              onClick={chargerCommandes}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg font-bold"
+            >
+              🔄 Actualiser
+            </button>
+
+            <button
+              onClick={() => setConnecte(false)}
+              className="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-lg font-bold"
+            >
+              🚪 Déconnexion
+            </button>
+
+          </div>
+
         </div>
 
         {loading ? (
           <div className="bg-white rounded-xl shadow p-8 text-center">
-            <p className="text-xl">
-              Chargement des commandes...
-            </p>
+            Chargement...
           </div>
         ) : orders.length === 0 ? (
           <div className="bg-white rounded-xl shadow p-8 text-center">
-            <p className="text-xl">
-              Aucune commande pour le moment.
-            </p>
+            Aucune commande.
           </div>
         ) : (
           <div className="grid gap-6">
 
             {orders.map((order) => {
+
               const items = articlesDeLaCommande(order.id);
 
               return (
@@ -146,35 +201,31 @@ export default function AdminPage() {
                   className="bg-white rounded-2xl shadow-lg p-6"
                 >
 
-                  <div className="flex flex-col md:flex-row justify-between gap-4 mb-5">
+                  <div className="flex justify-between mb-5">
 
                     <div>
                       <h2 className="text-2xl font-bold">
                         🧾 Commande #{order.id}
                       </h2>
 
-                      <p className="text-xl font-semibold text-green-700 mt-2">
+                      <p className="text-xl font-semibold text-green-700">
                         🍽️ Table {order.table_number}
                       </p>
 
-                      <p className="text-gray-500 mt-1">
+                      <p className="text-gray-500">
                         {new Date(order.created_at).toLocaleString("fr-FR")}
                       </p>
                     </div>
 
-                    <div className="text-left md:text-right">
+                    <div className="text-right">
 
-                      <p className="text-2xl font-bold mb-3">
+                      <p className="text-2xl font-bold">
                         {Number(order.total).toFixed(2)} €
                       </p>
 
-                      <span
-                        className={`inline-block px-4 py-2 rounded-full font-bold ${couleurStatut(
-                          order.status
-                        )}`}
-                      >
+                      <p className="mt-2 font-bold">
                         {order.status}
-                      </span>
+                      </p>
 
                     </div>
 
@@ -182,76 +233,62 @@ export default function AdminPage() {
 
                   <div className="border-t pt-4">
 
-                    <h3 className="text-xl font-bold mb-3">
-                      🍔 Articles commandés
-                    </h3>
+                    {items.map((item) => (
 
-                    <div className="space-y-2">
+                      <div
+                        key={item.id}
+                        className="flex justify-between bg-gray-50 p-3 rounded-lg mb-2"
+                      >
+                        <span>
+                          {item.quantity} × {item.product_name}
+                        </span>
 
-                      {items.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex justify-between bg-gray-50 p-3 rounded-lg"
-                        >
-                          <span className="font-semibold">
-                            {item.quantity} × {item.product_name}
-                          </span>
+                        <span>
+                          {(Number(item.price) * item.quantity).toFixed(2)} €
+                        </span>
+                      </div>
 
-                          <span>
-                            {(Number(item.price) * item.quantity).toFixed(2)} €
-                          </span>
-                        </div>
-                      ))}
-
-                    </div>
+                    ))}
 
                   </div>
 
-                  <div className="border-t mt-5 pt-5">
+                  <div className="flex flex-wrap gap-3 mt-5">
 
-                    <h3 className="font-bold mb-3">
-                      Modifier le statut :
-                    </h3>
+                    <button
+                      onClick={() =>
+                        changerStatut(order.id, "En attente")
+                      }
+                      className="bg-yellow-500 text-white px-4 py-2 rounded-lg font-bold"
+                    >
+                      ⏳ En attente
+                    </button>
 
-                    <div className="flex flex-wrap gap-3">
+                    <button
+                      onClick={() =>
+                        changerStatut(order.id, "En préparation")
+                      }
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold"
+                    >
+                      👨‍🍳 En préparation
+                    </button>
 
-                      <button
-                        onClick={() =>
-                          changerStatut(order.id, "En attente")
-                        }
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold"
-                      >
-                        ⏳ En attente
-                      </button>
+                    <button
+                      onClick={() =>
+                        changerStatut(order.id, "Prête")
+                      }
+                      className="bg-green-600 text-white px-4 py-2 rounded-lg font-bold"
+                    >
+                      ✅ Prête
+                    </button>
 
-                      <button
-                        onClick={() =>
-                          changerStatut(order.id, "En préparation")
-                        }
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold"
-                      >
-                        👨‍🍳 En préparation
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          changerStatut(order.id, "Prête")
-                        }
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold"
-                      >
-                        ✅ Prête
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          changerStatut(order.id, "Terminée")
-                        }
-                        className="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg font-semibold"
-                      >
-                        ✔️ Terminée
-                      </button>
-
-                    </div>
+                    <button
+                      onClick={() =>
+                        changerStatut(order.id, "Terminée")
+                      }
+                      className="bg-gray-700 text-white px-4 py-2 rounded-lg font-bold"
+                    >
+                      ✔️ Terminée
+                    </button>
 
                   </div>
 
