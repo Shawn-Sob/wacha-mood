@@ -1,90 +1,233 @@
-export const menu = [
-  // PLATS
+export type MenuItem = {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  image: string;
+};
+
+export const menu: MenuItem[] = [
+  // =====================
+  // 🍽️ PLATS
+  // =====================
+
   {
-    id: 1,
+    id: "poulet-yassa",
     name: "Poulet Yassa",
-    description: "Poulet mariné, oignons, citron, moutarde, huile d’olive, ail et thym",
     price: 12.5,
+    category: "Plats",
     image: "/plats/poulet-yassa.jpg",
   },
+
   {
-    id: 2,
+    id: "mafe",
     name: "Mafé",
-    description: "Bœuf, sauce arachide, carottes, pommes de terre, tomates, oignons, ail et épices",
     price: 12.5,
+    category: "Plats",
     image: "/plats/mafe.jpg",
   },
+
   {
-    id: 3,
+    id: "thieb",
     name: "Thiéb",
-    description: "Riz, poisson ou poulet, légumes et sauce tomate",
     price: 12.5,
+    category: "Plats",
     image: "/plats/thieb.jpg",
   },
+
   {
-    id: 4,
+    id: "ndole",
     name: "Ndolé",
-    description: "Feuilles de ndolé, arachides, crevettes ou viande, huile de palme, oignons, ail et épices",
     price: 12.5,
+    category: "Plats",
     image: "/plats/ndole.jpg",
   },
+
   {
-    id: 5,
-    name: "Alloco",
-    description: "Bananes plantain frites",
-    price: 4,
-    image: "/plats/alloco.jpg",
-  },
-  {
-    id: 6,
+    id: "poulet",
     name: "Poulet",
-    description: "Riz basmati, avocat, aiguillettes de poulet grillé, concombre, tomates cerises et edamame",
     price: 12.5,
+    category: "Plats",
     image: "/plats/poulet.jpg",
   },
+
   {
-    id: 7,
+    id: "tartare-saumon",
     name: "Tartare au saumon",
-    description: "Saumon frais, avocat, concombre, citron vert et sésame",
     price: 12.5,
+    category: "Plats",
     image: "/plats/tartare-saumon.jpg",
   },
+
   {
-    id: 8,
+    id: "salade-wacha",
     name: "Salade Wacha",
-    description: "Brocolis, asperges, courgettes, tomates cerises, mozzarella et edamame",
     price: 12.5,
+    category: "Plats",
     image: "/plats/salade-wacha.jpg",
   },
 
-  // BOISSONS
+  // =====================
+  // 🍌 ACCOMPAGNEMENT
+  // =====================
+
   {
-    id: 9,
-    name: "Jus de fruits frais",
-    description: "Orange, carotte, grenade, gingembre,bissap",
-    price: 5,
-    image: "/plats/jus-fruits.jpg",
+    id: "alloco",
+    name: "Alloco",
+    price: 4,
+    category: "Accompagnements",
+    image: "/plats/alloco.jpg",
   },
+
+  // =====================
+  // 🧃 JUS FRAIS
+  // =====================
+
   {
-    id: 10,
-    name: "Softs 50 cl",
-    description: "Eau Volvic, San Pellegrino",
+    id: "jus-orange",
+    name: "Jus d'orange",
+    price: 5,
+    category: "Jus frais",
+    image: "/boissons/jus-orange.jpg",
+  },
+
+  {
+    id: "jus-carotte",
+    name: "Jus de carotte",
+    price: 5,
+    category: "Jus frais",
+    image: "/boissons/jus-carotte.jpg",
+  },
+
+  {
+    id: "jus-grenade",
+    name: "Jus de grenade",
+    price: 5,
+    category: "Jus frais",
+    image: "/boissons/jus-grenade.jpg",
+  },
+
+  {
+    id: "jus-bissap",
+    name: "Jus de bissap",
+    price: 5,
+    category: "Jus frais",
+    image: "/boissons/jus-bissap.jpg",
+  },
+
+  {
+    id: "jus-gingembre",
+    name: "Jus de gingembre",
+    price: 5,
+    category: "Jus frais",
+    image: "/boissons/jus-gingembre.jpg",
+  },
+
+  // =====================
+  // 💧 EAUX
+  // =====================
+
+  {
+    id: "volvic",
+    name: "Volvic 50 cl",
     price: 2.5,
-    image: "/plats/softs.jpg",
+    category: "Eaux",
+    image: "/boissons/volvic.jpg",
   },
+
   {
-    id: 11,
-    name: "Sodas 33 cl",
-    description:
-      "Coca, Coca Zéro, Sprite, Orangina, Fuze Tea pêche, 7up Mojito, Schweppes agrumes",
-    price: 2,
-    image: "/plats/sodas.jpg",
+    id: "san-pellegrino",
+    name: "San Pellegrino 50 cl",
+    price: 2.5,
+    category: "Eaux",
+    image: "/boissons/san-pellegrino.jpg",
   },
+
+  // =====================
+  // 🍺 BIÈRES
+  // =====================
+
   {
-    id: 12,
-    name: "Bières bouteille 33 cl",
-    description: "Guinness, Cameroun, Peroni, Chimay",
+    id: "guinness",
+    name: "Guinness 33 cl",
     price: 5,
-    image: "/plats/bieres.jpg",
+    category: "Bières",
+    image: "/boissons/guinness.jpg",
+  },
+
+  {
+    id: "peroni",
+    name: "Peroni 33 cl",
+    price: 5,
+    category: "Bières",
+    image: "/boissons/peroni.jpg",
+  },
+
+  {
+    id: "chimay",
+    name: "Chimay 33 cl",
+    price: 5,
+    category: "Bières",
+    image: "/boissons/chimay.jpg",
+  },
+
+  // =====================
+  // 🥤 SODAS
+  // =====================
+
+  {
+    id: "coca-cola",
+    name: "Coca-Cola",
+    price: 2,
+    category: "Sodas",
+    image: "/boissons/coca-cola.jpg",
+  },
+
+  {
+    id: "coca-cola-zero",
+    name: "Coca-Cola Zéro",
+    price: 2,
+    category: "Sodas",
+    image: "/boissons/coca-cola-zero.jpg",
+  },
+
+  {
+    id: "sprite",
+    name: "Sprite",
+    price: 2,
+    category: "Sodas",
+    image: "/boissons/sprite.jpg",
+  },
+
+  {
+    id: "orangina",
+    name: "Orangina",
+    price: 2,
+    category: "Sodas",
+    image: "/boissons/orangina.jpg",
+  },
+
+  {
+    id: "fuze-tea-peche",
+    name: "Fuze Tea Pêche",
+    price: 2,
+    category: "Sodas",
+    image: "/boissons/fuze-tea-peche.jpg",
+  },
+
+  {
+    id: "7up-mojito",
+    name: "7UP Mojito",
+    price: 2,
+    category: "Sodas",
+    image: "/boissons/7up-mojito.jpg",
+  },
+
+  {
+    id: "schweppes-agrumes",
+    name: "Schweppes Agrumes",
+    price: 2,
+    category: "Sodas",
+    image: "/boissons/schweppes-agrumes.jpg",
   },
 ];
